@@ -39,6 +39,7 @@ use Drupal\entity\Revision\EntityRevisionLogTrait;
  *   },
  *   links = {
  *     "revision" = "/entity_test_enhanced/{entity_test_enhanced}/revisions/{entity_test_enhanced_revision}/view",
+ *     "version-history" = "/entity_test_enhanced/{entity_test_enhanced}/revisions",
  *   }
  * )
  */
