@@ -12,6 +12,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 
@@ -39,26 +40,34 @@ class RevisionOverviewController extends ControllerBase {
    * {@inheritdoc}
    */
   protected function buildRevertRevisionLink(EntityInterface $entity_revision) {
-    return [
-      'title' => t('Revert'),
-      'url' => $entity_revision->urlInfo('revision-revert'),
-    ];
+    if ($entity_revision->hasLinkTemplate('revision-revert')) {
+      return [
+        'title' => t('Revert'),
+        'url' => $entity_revision->toUrl('revision-revert'),
+      ];
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function buildDeleteRevisionLink(EntityInterface $entity_revision) {
-    return [
-      'title' => t('Delete'),
-      'url' => $entity_revision->urlInfo('revision-delete'),
-    ];
+    if ($entity_revision->hasLinkTemplate('revision-delete')) {
+      return [
+        'title' => t('Delete'),
+        'url' => $entity_revision->toUrl('revision-delete'),
+      ];
+    }
+  }
+
+  public function revisionOverviewController(RouteMatchInterface $route_match) {
+    return $this->revisionOverview($route_match->getParameter($route_match->getRouteObject()->getOption('entity_type_id')));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getRevisionDescription(ContentEntityInterface $revision, $is_current = FALSE) {
+  protected function getRevisionDescription(ContentEntityInterface $revision, $is_default = FALSE) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface|\Drupal\user\EntityOwnerInterface $revision */
 
     if ($revision instanceof EntityOwnerInterface) {
@@ -74,12 +83,7 @@ class RevisionOverviewController extends ControllerBase {
     if ($revision instanceof EntityRevisionLogInterface) {
       // Use revision link to link to revisions that are not active.
       $date = $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
-      if (!$is_current) {
-        $link = $revision->toLink($date, 'revision');
-      }
-      else {
-        $link = $revision->toLink($date);
-      }
+      $link = $revision->toLink($date, 'revision');
     }
     else {
       $link = $revision->toLink($revision->label(), 'revision');
@@ -102,7 +106,7 @@ class RevisionOverviewController extends ControllerBase {
         '#type' => 'inline_template',
         '#template' => $template,
         '#context' => [
-          'date' => $link,
+          'date' => $link->toString(),
           'username' => $username,
           'message' => ['#markup' => $markup, '#allowed_tags' => Xss::getHtmlTagList()],
         ],

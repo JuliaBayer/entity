@@ -22,6 +22,7 @@ use Drupal\entity\Revision\EntityRevisionLogTrait;
  *   handlers = {
  *     "storage" = "\Drupal\Core\Entity\Sql\SqlContentEntityStorage",
  *     "route_provider" = {
+ *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *       "revision" = "\Drupal\entity\Routing\RevisionRouteProvider",
  *     },
  *   },
@@ -38,6 +39,7 @@ use Drupal\entity\Revision\EntityRevisionLogTrait;
  *     "langcode" = "langcode",
  *   },
  *   links = {
+ *     "canonical" = "/entity_test_enhanced/{entity_test_enhanced}",
  *     "revision" = "/entity_test_enhanced/{entity_test_enhanced}/revisions/{entity_test_enhanced_revision}/view",
  *     "version-history" = "/entity_test_enhanced/{entity_test_enhanced}/revisions",
  *   }
