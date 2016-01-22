@@ -46,9 +46,17 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, AccountInterface $account, Request $request) {
+  public function access(Route $route, AccountInterface $account, Request $request = NULL) {
     $operation = $route->getRequirement('_entity_access_revision');
     list(, $operation) = explode('.', $operation, 2);
+
+    // If the version-history link is a local task, this access function is
+    // called twice without the $request parameter to check access for the local
+    // task.
+    if ($request === NULL) {
+      // @todo Verify if a useful access check can be provided here.
+      return AccessResult::allowed();
+    }
 
     if ($operation === 'list') {
       $_entity = $request->attributes->get('_entity', $request->attributes->get($route->getOption('entity_type_id')));
