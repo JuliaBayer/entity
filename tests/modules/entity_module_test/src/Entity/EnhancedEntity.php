@@ -46,10 +46,13 @@ use Drupal\entity\Revision\EntityRevisionLogTrait;
  *     "langcode" = "langcode",
  *   },
  *   links = {
+ *     "add-page" = "/entity_test_enhanced/add",
+ *     "add-form" = "/entity_test_enhanced/add/{type}",
  *     "canonical" = "/entity_test_enhanced/{entity_test_enhanced}",
  *     "revision" = "/entity_test_enhanced/{entity_test_enhanced}/revisions/{entity_test_enhanced_revision}/view",
  *     "version-history" = "/entity_test_enhanced/{entity_test_enhanced}/revisions",
- *   }
+ *   },
+ *   bundle_entity_type = "entity_test_enhanced_bundle"
  * )
  */
 class EnhancedEntity extends ContentEntityBase {
